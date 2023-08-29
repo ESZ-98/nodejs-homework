@@ -4,8 +4,8 @@ const getAll = async () => {
   return Contact.find();
 };
 
-const getOne = async id => {
-  return Contact.findById(id);
+const getById = async id => {
+  return Contact.findOne({ _id: id });
 };
 
 const create = async data => {
@@ -26,7 +26,7 @@ const remove = async id => {
 
 module.exports = {
   getAll,
-  getOne,
+  getById,
   create,
   update,
   updateFavorite,

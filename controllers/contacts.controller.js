@@ -6,6 +6,7 @@ const get = async (req, res, next) => {
     res.json({
       status: 'success',
       code: 200,
+      results: results.length,
       data: {
         contacts: results,
       },
@@ -18,13 +19,12 @@ const get = async (req, res, next) => {
 
 const getById = async (req, res) => {
   try {
-    const { id } = req.params;
-    const results = await contactsService.getOne(id);
+    const { contactId } = req.params;
+    const results = await contactsService.getById(contactId);
     if (!results) {
       res.status(404).json({
         status: 'not-found',
         code: 404,
-
         data: { contact: results },
       });
     }
@@ -59,9 +59,9 @@ const create = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { contactId } = req.params;
     const { body } = req;
-    const results = await contactsService.update(id, body);
+    const results = await contactsService.update(contactId, body);
     res.json({
       status: 'success',
       code: 200,
@@ -101,12 +101,12 @@ const updateFavorite = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const results = await contactsService.remove(id);
+    const { contactId } = req.params;
+    const results = await contactsService.remove(contactId);
     res.json({
       status: 'success',
       code: 200,
-      data: { id, data: { contact: results } },
+      data: { contactId, data: { contact: results } },
     });
   } catch (e) {
     console.error(e);
