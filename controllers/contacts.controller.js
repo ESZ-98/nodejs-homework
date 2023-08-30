@@ -37,7 +37,7 @@ const getById = async (req, res) => {
     res.status(400).json({
       status: 'error',
       code: 400,
-      data: { message: e.message },
+      data: { message: "This ID doesn't exist" },
     });
   }
 };
