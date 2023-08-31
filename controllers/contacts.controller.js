@@ -21,18 +21,20 @@ const getById = async (req, res) => {
   try {
     const { contactId } = req.params;
     const results = await contactsService.getById(contactId);
-    if (!results) {
+    if (results) {
+      res.json({
+        status: 'success',
+        code: 200,
+        data: { contact: results },
+      });
+    } else {
       res.status(404).json({
         status: 'not-found',
         code: 404,
-        data: { contact: results },
+        message: `Not found task id: ${contactId}`,
+        data: 'Not Found',
       });
     }
-    res.json({
-      status: 'success',
-      code: 200,
-      data: { contact: results },
-    });
   } catch (e) {
     res.status(400).json({
       status: 'error',
