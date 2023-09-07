@@ -51,15 +51,6 @@ const loginUser = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
 
-    const validateLogIn = schemaUser.validate(req.body);
-    if (validateLogIn.error) {
-      return res.status(400).json({
-        status: 'bad-request',
-        message: 'Invalid data',
-        error: validateLogIn.error,
-      });
-    }
-
     if (!user || !user.validPassword(password)) {
       return res.status(401).json({
         status: 'unauthorized',
@@ -69,11 +60,21 @@ const loginUser = async (req, res, next) => {
       });
     }
 
+    const validateLogIn = schemaUser.validate(req.body);
+    if (validateLogIn.error) {
+      return res.status(400).json({
+        status: 'bad-request',
+        message: 'Invalid data',
+        error: validateLogIn.error,
+      });
+    }
+
     const payload = {
       id: user._id,
     };
 
-    const token = jwt.sign(payload, process.env.SECRET, { expiresIn: '1h' });
+    const secret = process.env.SECRET;
+    const token = jwt.sign(payload, secret, { expiresIn: '1h' });
     user.token = token;
     await user.save();
     return res.status(200).json({
@@ -93,9 +94,9 @@ const loginUser = async (req, res, next) => {
 };
 
 const logoutUser = async (req, res, next) => {
-  const id = req.user._id;
   try {
-    const user = await User.findById(id);
+    const { id } = req.user;
+    const user = await user.findOneAndUpdate({ _id: id }, { $set: { token: null } });
     if (!user) {
       return res.status(401).json({
         status: 'unauthorized',
@@ -103,9 +104,6 @@ const logoutUser = async (req, res, next) => {
         message: 'Not authorized',
       });
     }
-    user.token = null;
-    await user.save();
-
     return res.status(204).json({
       status: 'no-content',
       code: 204,
@@ -117,9 +115,8 @@ const logoutUser = async (req, res, next) => {
 };
 
 const currentUser = async (req, res, next) => {
-  const { _id, email } = req.user;
   try {
-    const user = await User.findById(_id);
+    const { user } = req.user;
     if (!user) {
       return res.status(401).json({
         status: 'unauthorized',

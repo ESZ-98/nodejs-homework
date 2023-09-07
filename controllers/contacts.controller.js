@@ -2,8 +2,9 @@ const contactsService = require('../services/contacts.service');
 
 const get = async (req, res, next) => {
   try {
-    const results = await contactsService.getAll();
-    res.json({
+    const { query, user } = req;
+    const results = await contactsService.getAll({ ...query, owner: user._id });
+    return res.json({
       status: 'success',
       code: 200,
       results: results.length,
@@ -19,16 +20,17 @@ const get = async (req, res, next) => {
 
 const getById = async (req, res) => {
   try {
-    const { contactId } = req.params;
-    const results = await contactsService.getById(contactId);
+    const { params, user } = req;
+    const { contactId } = params;
+    const results = await contactsService.getOne(contactId, user._id);
     if (results) {
-      res.json({
+      return res.json({
         status: 'success',
         code: 200,
         data: { contact: results },
       });
     } else {
-      res.status(404).json({
+      return res.status(404).json({
         status: 'not-found',
         code: 404,
         message: `Not found task id: ${contactId}`,
@@ -46,9 +48,9 @@ const getById = async (req, res) => {
 
 const create = async (req, res, next) => {
   try {
-    const { body } = req;
-    const results = await contactsService.create(body);
-    res.json({
+    const { body, user } = req;
+    const results = await contactsService.create({ ...body, owner: user._id });
+    return res.json({
       status: 'success',
       code: 201,
       data: { contact: results },
@@ -62,9 +64,9 @@ const create = async (req, res, next) => {
 const update = async (req, res, next) => {
   try {
     const { contactId } = req.params;
-    const { body } = req;
-    const results = await contactsService.update(contactId, body);
-    res.json({
+    const { body, user } = req;
+    const results = await contactsService.update(contactId, user._id, body);
+    return res.json({
       status: 'success',
       code: 200,
       data: { contact: results },
@@ -77,14 +79,15 @@ const update = async (req, res, next) => {
 
 const updateFavorite = async (req, res, next) => {
   try {
-    const { contactId } = req.params;
-    const { favorite } = req.body;
+    const { body, params, user } = req;
+    const { contactId } = params;
+    const { favorite } = body;
 
     if (typeof favorite !== 'boolean') {
       return res.status(400).json({ message: 'Missing field favorite' });
     }
 
-    const updatedContact = await contactsService.update(contactId, favorite);
+    const updatedContact = await contactsService.update(contactId, user._id, favorite);
 
     if (!updatedContact) {
       return res.status(404).json({ message: 'Not found' });
@@ -104,8 +107,9 @@ const updateFavorite = async (req, res, next) => {
 const remove = async (req, res, next) => {
   try {
     const { contactId } = req.params;
-    const results = await contactsService.remove(contactId);
-    res.json({
+    const { user } = req;
+    const results = await contactsService.remove(contactId, user._id);
+    return res.json({
       status: 'success',
       code: 200,
       data: { contactId, data: { contact: results } },
