@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const contactsRouter = require('./routes/api/contacts.routes');
+const usersRouter = require('./routes/api/users.routes');
 
 const app = express();
 
@@ -13,6 +14,7 @@ const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
+require('./config/config.password');
 
 mongoose
   .connect(process.env.DATABASE_URL, {
@@ -29,6 +31,7 @@ mongoose
   });
 
 app.use('/api/', contactsRouter);
+app.use('/api/', usersRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' });
