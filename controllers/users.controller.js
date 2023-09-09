@@ -95,15 +95,6 @@ const loginUser = async (req, res, next) => {
 
 const logoutUser = async (req, res, next) => {
   try {
-    const { id } = req.user;
-    const user = await user.findOneAndUpdate({ _id: id }, { $set: { token: null } });
-    if (!user) {
-      return res.status(401).json({
-        status: 'unauthorized',
-        code: 401,
-        message: 'Not authorized',
-      });
-    }
     return res.status(204).json({
       status: 'no-content',
       code: 204,
@@ -116,22 +107,14 @@ const logoutUser = async (req, res, next) => {
 
 const currentUser = async (req, res, next) => {
   try {
-    const { user } = req.user;
-    if (!user) {
-      return res.status(401).json({
-        status: 'unauthorized',
-        code: 401,
-        message: 'Unauthorized',
-      });
-    }
-    return res.json({
-      status: 'success',
-      code: 200,
-      user: {
-        email,
-        subscription: 'starter',
-      },
-    });
+    return res.status(200).json({
+       status: 'success',
+       code: 200,
+       user: {
+         email,
+         subscription: 'starter',
+       },
+     });
   } catch (error) {
     next(error);
   }
