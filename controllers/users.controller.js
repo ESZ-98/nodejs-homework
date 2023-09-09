@@ -95,6 +95,11 @@ const loginUser = async (req, res, next) => {
 
 const logoutUser = async (req, res, next) => {
   try {
+    const id = req.user._id;
+    const user = await User.findById(id);
+    user.token = null;
+    await user.save();
+    
     return res.status(204).json({
       status: 'no-content',
       code: 204,
@@ -108,13 +113,13 @@ const logoutUser = async (req, res, next) => {
 const currentUser = async (req, res, next) => {
   try {
     return res.status(200).json({
-       status: 'success',
-       code: 200,
-       user: {
-         email,
-         subscription: 'starter',
-       },
-     });
+      status: 'success',
+      code: 200,
+      user: {
+        email,
+        subscription: 'starter',
+      },
+    });
   } catch (error) {
     next(error);
   }
