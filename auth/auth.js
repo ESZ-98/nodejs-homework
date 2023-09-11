@@ -1,9 +1,8 @@
 const passport = require('passport');
 
-const auth = (req, res, next) => {
-  const token = req.headers.authorization.split(' ')[1];
+const authMiddleware = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user) => {
-    if (err || !user || !user.token || user.token !== token) {
+    if (!user || err) {
       return res.status(401).json({
         status: 'error',
         code: 401,
@@ -16,4 +15,4 @@ const auth = (req, res, next) => {
   })(req, res, next);
 };
 
-module.exports = auth;
+module.exports = authMiddleware;

@@ -111,15 +111,19 @@ const logoutUser = async (req, res, next) => {
 };
 
 const currentUser = async (req, res, next) => {
+  const { _id, email } = req.user;
   try {
-    return res.status(200).json({
-      status: 'success',
-      code: 200,
-      user: {
-        email,
-        subscription: 'starter',
-      },
-    });
+    const user = await User.findById(_id);
+    if (user) {
+      return res.status(200).json({
+        status: 'success',
+        code: 200,
+        user: {
+          email,
+          subscription: 'starter',
+        },
+      });
+    }
   } catch (error) {
     next(error);
   }
