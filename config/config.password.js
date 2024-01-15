@@ -1,7 +1,7 @@
-const passport = require('passport');
-const passportJWT = require('passport-jwt');
-const User = require('../models/user.model');
-require('dotenv').config();
+import passport from 'passport';
+import passportJWT from 'passport-jwt';
+import {User} from '../models/user.model.js';
+import "dotenv/config";
 const secret = process.env.SECRET;
 
 const ExtractJWT = passportJWT.ExtractJwt;

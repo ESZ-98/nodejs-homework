@@ -1,14 +1,14 @@
-const express = require('express');
+import express from 'express';
 
-const {
+import {
   listContacts,
   getContactById,
   removeContact,
   addContact,
   updateContact,
-} = require('../../models/contacts');
+} from ('../../models/contacts.js');
 
-const { schemaPost, schemaPut } = require('../../validation/validation');
+import { schemaPost, schemaPut } from ('../../validation/validation.js');
 
 const router = express.Router();
 
@@ -64,4 +64,4 @@ router.put('/:contactId', async (req, res, next) => {
   }
 });
 
-module.exports = router;
+export {router};

@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const contactsController = require('../../controllers/contacts.controller');
-const authMiddleware = require('../../auth/auth');
+import {contactsController} from '../../controllers/contacts.controller.js';
+import {authMiddleware} from '../../auth/auth.js';
 
 router.get('/contacts', authMiddleware, contactsController.get);
 
@@ -15,4 +15,4 @@ router.patch('/contacts/:contactId/favorite', authMiddleware, contactsController
 
 router.delete('/contacts/:contactId', authMiddleware, contactsController.remove);
 
-module.exports = router;
+export {router};

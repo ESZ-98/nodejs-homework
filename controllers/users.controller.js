@@ -1,8 +1,8 @@
-const Joi = require('joi');
-const User = require('../models/user.model');
-const jwt = require('jsonwebtoken');
+import Joi from 'joi';
+import {User} from '../models/user.model.js';
+import jwt from 'jsonwebtoken';
 
-require('dotenv').config();
+import "dotenv/config";
 
 const schemaUser = Joi.object({
   email: Joi.string().email({ minDomainSegments: 2 }).trim().required(),
@@ -129,4 +129,4 @@ const currentUser = async (req, res, next) => {
   }
 };
 
-module.exports = { signupUser, loginUser, logoutUser, currentUser };
+export { signupUser, loginUser, logoutUser, currentUser };

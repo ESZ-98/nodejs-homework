@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const { Schema } = mongoose;
-const bCrypt = require('bcryptjs');
+import bCrypt from 'bcryptjs';
 
 const user = new Schema({
   password: {
@@ -33,4 +33,4 @@ user.methods.validPassword = function (password) {
 
 const User = mongoose.model('user', user, 'users');
 
-module.exports = User;
+export {User};

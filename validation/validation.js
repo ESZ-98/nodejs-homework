@@ -1,4 +1,4 @@
-const Joi = require('joi');
+import Joi from 'joi';
 
 const schemaPost = Joi.object({
   name: Joi.string().min(2).trim().required(),
@@ -12,4 +12,4 @@ const schemaPut = Joi.object({
   phone: Joi.string().trim(),
 }).min(1);
 
-module.exports = { schemaPost, schemaPut };
+export { schemaPost, schemaPut };

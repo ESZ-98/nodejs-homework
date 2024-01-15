@@ -1,4 +1,4 @@
-const Contact = require('../models/contacts.model');
+import {Contact} from '../models/contacts.model.js';
 
 const getAll = async () => {
   return Contact.find();
@@ -24,7 +24,7 @@ const remove = async (id, userId) => {
   return Contact.findOneAndDelete({ _id: id, owner: userId });
 };
 
-module.exports = {
+export {
   getAll,
   getById,
   create,

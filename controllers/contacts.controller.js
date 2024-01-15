@@ -1,4 +1,4 @@
-const contactsService = require('../services/contacts.service');
+import {contactsService} from '../services/contacts.service.js';
 
 const get = async (req, res, next) => {
   try {
@@ -120,7 +120,7 @@ const remove = async (req, res, next) => {
   }
 };
 
-module.exports = {
+export {
   get,
   getById,
   create,

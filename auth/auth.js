@@ -1,4 +1,4 @@
-const passport = require('passport');
+import passport from 'passport';
 
 const authMiddleware = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user) => {
@@ -15,4 +15,4 @@ const authMiddleware = (req, res, next) => {
   })(req, res, next);
 };
 
-module.exports = authMiddleware;
+export {authMiddleware};
