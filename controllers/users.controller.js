@@ -129,4 +129,4 @@ const currentUser = async (req, res, next) => {
   }
 };
 
-export { signupUser, loginUser, logoutUser, currentUser };
+export default { signupUser, loginUser, logoutUser, currentUser };

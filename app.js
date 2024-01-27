@@ -4,8 +4,8 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import 'dotenv/config';
 
-import { router as contactsRouter } from './routes/api/contacts.js';
-import { usersRouter } from '../routes/api/users.routes.js';
+// import { router as contactsRouter } from './routes/api/contacts.js';
+import { router as usersRouter } from '../routes/api/users.routes.js';
 
 const app = express();
 
@@ -14,7 +14,7 @@ const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
-import './config/config.password';
+import './config/config.password.js';
 
 mongoose
   .connect(process.env.DATABASE_URL, {
@@ -30,7 +30,7 @@ mongoose
     process.exit(1);
   });
 
-app.use('/api/', contactsRouter);
+// app.use('/api/', contactsRouter);
 app.use('/api/', usersRouter);
 
 app.use((req, res) => {
