@@ -1,7 +1,7 @@
-const fs = require('node:fs').promises;
-const path = require('node:path');
-const contactsPath = path.join(__dirname, './contacts.json');
-const { nanoid } = require('nanoid');
+import fs from "node:fs.promises";
+import path from "node:path";
+const contactsPath = path.join(process.cwd(), '/routes/api/db/contacts.json');
+import nanoid from 'nanoid';
 
 const listContacts = async () => {
   try {
@@ -76,7 +76,7 @@ const updateContact = async (contactId, body) => {
   }
 };
 
-module.exports = {
+export {
   listContacts,
   getContactById,
   removeContact,
