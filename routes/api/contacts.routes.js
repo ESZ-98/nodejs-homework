@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import {contactsController} from '../../controllers/contacts.controller.js';
+import contactsController from '../../controllers/contacts.controller.js';
 import {authMiddleware} from '../../auth/auth.js';
 
 router.get('/contacts', authMiddleware, contactsController.get);

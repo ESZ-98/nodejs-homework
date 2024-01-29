@@ -4,8 +4,8 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import 'dotenv/config';
 
-// import { router as contactsRouter } from './routes/api/contacts.js';
-import { router as usersRouter } from '../routes/api/users.routes.js';
+import { router as contactsRouter } from './routes/api/contacts.routes.js';
+import { router as usersRouter } from './routes/api/users.routes.js';
 
 const app = express();
 
@@ -30,7 +30,7 @@ mongoose
     process.exit(1);
   });
 
-// app.use('/api/', contactsRouter);
+app.use('/api/', contactsRouter);
 app.use('/api/', usersRouter);
 
 app.use((req, res) => {

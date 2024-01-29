@@ -24,7 +24,7 @@ const remove = async (id, userId) => {
   return Contact.findOneAndDelete({ _id: id, owner: userId });
 };
 
-export {
+export default {
   getAll,
   getById,
   create,

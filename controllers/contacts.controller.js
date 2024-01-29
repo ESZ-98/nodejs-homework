@@ -1,4 +1,4 @@
-import {contactsService} from '../services/contacts.service.js';
+import contactsService from '../services/contacts.service.js';
 
 const get = async (req, res, next) => {
   try {
@@ -22,7 +22,7 @@ const getById = async (req, res) => {
   try {
     const { params, user } = req;
     const { contactId } = params;
-    const results = await contactsService.getOne(contactId, user._id);
+    const results = await contactsService.getById(contactId, user._id);
     if (results) {
       return res.json({
         status: 'success',
@@ -87,7 +87,7 @@ const updateFavorite = async (req, res, next) => {
       return res.status(400).json({ message: 'Missing field favorite' });
     }
 
-    const updatedContact = await contactsService.update(contactId, user._id, favorite);
+    const updatedContact = await contactsService.updateFavorite(contactId, user._id, favorite);
 
     if (!updatedContact) {
       return res.status(404).json({ message: 'Not found' });
@@ -120,7 +120,7 @@ const remove = async (req, res, next) => {
   }
 };
 
-export {
+export default {
   get,
   getById,
   create,
