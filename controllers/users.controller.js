@@ -1,8 +1,12 @@
 import Joi from 'joi';
-import {User} from '../models/user.model.js';
+import fs from 'node:fs.promises';
+import { User } from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
+import path from 'node:path';
+import config from '../config/config';
+import Jimp from 'jimp';
 
-import "dotenv/config";
+import 'dotenv/config';
 
 const schemaUser = Joi.object({
   email: Joi.string().email({ minDomainSegments: 2 }).trim().required(),
@@ -31,6 +35,7 @@ const signupUser = async (req, res, next) => {
   }
   try {
     const newUser = new User({ email });
+    newUser.generateAvatar();
     newUser.setPassword(password);
     await newUser.save();
     return res.status(201).json({
@@ -99,7 +104,7 @@ const logoutUser = async (req, res, next) => {
     const user = await User.findById(id);
     user.token = null;
     await user.save();
-    
+
     return res.status(204).json({
       status: 'no-content',
       code: 204,
@@ -111,7 +116,7 @@ const logoutUser = async (req, res, next) => {
 };
 
 const currentUser = async (req, res, next) => {
-  const { _id, email } = req.user;
+  const { _id, email, avatarURL } = req.user;
   try {
     const user = await User.findById(_id);
     if (user) {
@@ -121,6 +126,7 @@ const currentUser = async (req, res, next) => {
         user: {
           email,
           subscription: 'starter',
+          avatarURL: avatarURL,
         },
       });
     }
@@ -129,4 +135,33 @@ const currentUser = async (req, res, next) => {
   }
 };
 
-export default { signupUser, loginUser, logoutUser, currentUser };
+const updateAvatars = async (req, res) => {
+  const { _id } = req.user;
+  if (!user) {
+    return res.status(401).json({
+      status: 'unauthorized',
+      code: 401,
+      message: 'Not authorized',
+      data: 'Unauthorized',
+    });
+  } else {
+    const { path: tmpUpload, originalName } = req.file;
+    const fileName = `${_id}_${originalName}`;
+    const resultUpload = path.join(config.getAvatarsPath, fileName);
+    await fs.rename(tmpUpload, resultUpload);
+    const avatar = await Jimp.read(resultUpload);
+    avatar.resize(250, 250);
+    avatar.write(resultUpload);
+    const avatarURL = path.join('avatars', fileName);
+    await User.findByIdAndUpdate(_id, { avatarURL });
+    return res.status(200).json({
+      status: 'success',
+      code: 200,
+      data: {
+        avatarURL,
+      },
+    });
+  }
+};
+
+export default { signupUser, loginUser, logoutUser, currentUser, updateAvatars };

@@ -2,10 +2,12 @@ import express from 'express';
 import logger from 'morgan';
 import cors from 'cors';
 import mongoose from 'mongoose';
+
 import 'dotenv/config';
 
 import { router as contactsRouter } from './routes/api/contacts.routes.js';
 import { router as usersRouter } from './routes/api/users.routes.js';
+import { router as uploadRouter } from './routes/api/upload.routes.js';
 
 const app = express();
 
@@ -32,6 +34,8 @@ mongoose
 
 app.use('/api/', contactsRouter);
 app.use('/api/', usersRouter);
+app.use('/api/', uploadRouter);
+app.use(express.static('public'));
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' });
