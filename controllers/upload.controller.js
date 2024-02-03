@@ -1,6 +1,6 @@
 import fs from 'node:fs.promises';
 import path from 'node:path';
-import config from '../config/config';
+import config from '../config/config.js';
 
 const uploadFile = async (req, res, next) => {
   const { description } = req.body;

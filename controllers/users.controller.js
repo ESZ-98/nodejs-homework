@@ -3,7 +3,7 @@ import fs from 'node:fs.promises';
 import { User } from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
 import path from 'node:path';
-import config from '../config/config';
+import config from '../config/config.js';
 import Jimp from 'jimp';
 
 import 'dotenv/config';
