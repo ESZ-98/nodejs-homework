@@ -45,4 +45,24 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message });
 });
 
-export { app };
+
+const isAccessible = async folder => {
+  try {
+    await fs.access(folder);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const createFolderIsNotExist = async folder => {
+  if (!(await isAccessible(folder))) {
+    await fs.mkdir(folder, {
+      recursive: true,
+    });
+  } else {
+    console.log('Directories are already created');
+  }
+};
+
+export default { app, isAccessible, createFolderIsNotExist };
