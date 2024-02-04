@@ -137,31 +137,22 @@ const currentUser = async (req, res, next) => {
 
 const updateAvatars = async (req, res) => {
   const { _id } = req.user;
-  if (!User) {
-    return res.status(401).json({
-      status: 'unauthorized',
-      code: 401,
-      message: 'Not authorized',
-      data: 'Unauthorized',
-    });
-  } else {
-    const { path: tmpUpload, originalname } = req.file;
-    const fileName = `${_id}_${originalname}`;
-    const resultUpload = path.join(config.getAvatarsPath(), fileName);
-    await fs.rename(tmpUpload, resultUpload);
-    const avatar = await Jimp.read(resultUpload);
-    avatar.resize(250, 250);
-    avatar.write(resultUpload);
-    const avatarURL = path.join('avatars', fileName);
-    await User.findByIdAndUpdate(_id, { avatarURL });
-    return res.status(200).json({
-      status: 'success',
-      code: 200,
-      data: {
-        avatarURL,
-      },
-    });
-  }
+  const { path: tmpUpload, originalname } = req.file;
+  const fileName = `${_id}_${originalname}`;
+  const resultUpload = path.join(config.getAvatarsPath(), fileName);
+  await fs.rename(tmpUpload, resultUpload);
+  const avatar = await Jimp.read(resultUpload);
+  avatar.resize(250, 250);
+  avatar.write(resultUpload);
+  const avatarURL = path.join('avatars', fileName);
+  await User.findByIdAndUpdate(_id, { avatarURL });
+  return res.status(200).json({
+    status: 'success',
+    code: 200,
+    data: {
+      avatarURL,
+    },
+  });
 };
 
 export default { signupUser, loginUser, logoutUser, currentUser, updateAvatars };
