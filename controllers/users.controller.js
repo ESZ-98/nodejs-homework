@@ -145,8 +145,8 @@ const updateAvatars = async (req, res) => {
       data: 'Unauthorized',
     });
   } else {
-    const { path: tmpUpload, originalName } = req.file;
-    const fileName = `${_id}_${originalName}`;
+    const { path: tmpUpload, originalname } = req.file;
+    const fileName = `${_id}_${originalname}`;
     const resultUpload = path.join(config.getAvatarsPath, fileName);
     await fs.rename(tmpUpload, resultUpload);
     const avatar = await Jimp.read(resultUpload);

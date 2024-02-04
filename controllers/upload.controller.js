@@ -4,8 +4,8 @@ import config from '../config/config.js';
 
 const uploadFile = async (req, res, next) => {
   const { description } = req.body;
-  const { path: temporaryName, originalName } = req.file;
-  const fileName = path.join(config.getAvatarsPath, originalName);
+  const { path: temporaryName, originalname } = req.file;
+  const fileName = path.join(config.getAvatarsPath, originalname);
   try {
     await fs.rename(temporaryName, fileName);
   } catch (err) {

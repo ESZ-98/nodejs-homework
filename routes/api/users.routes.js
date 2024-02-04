@@ -11,7 +11,8 @@ router.get('/users/current', authMiddleware, usersController.currentUser);
 router.patch(
   '/users/avatars',
   authMiddleware,
-  upload.single('picture', usersController.updateAvatars)
+  upload.single('avatar'),
+  usersController.updateAvatars
 );
 
 export { router };

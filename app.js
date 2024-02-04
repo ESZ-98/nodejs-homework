@@ -2,6 +2,7 @@ import express from 'express';
 import logger from 'morgan';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import fs from 'fs/promises';
 
 import 'dotenv/config';
 
