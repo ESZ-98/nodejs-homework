@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import fs from 'node:fs.promises';
+import fs from 'fs/promises';
 import { User } from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
 import path from 'node:path';
@@ -137,7 +137,7 @@ const currentUser = async (req, res, next) => {
 
 const updateAvatars = async (req, res) => {
   const { _id } = req.user;
-  if (!user) {
+  if (!User) {
     return res.status(401).json({
       status: 'unauthorized',
       code: 401,
