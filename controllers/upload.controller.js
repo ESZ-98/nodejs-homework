@@ -5,7 +5,7 @@ import config from '../config/config.js';
 const uploadFile = async (req, res, next) => {
   const { description } = req.body;
   const { path: temporaryName, originalname } = req.file;
-  const fileName = path.join(config.getAvatarsPath, originalname);
+  const fileName = path.join(config.getAvatarsPath(), originalname);
   try {
     await fs.rename(temporaryName, fileName);
   } catch (err) {
@@ -15,4 +15,4 @@ const uploadFile = async (req, res, next) => {
   res.json({ description, message: 'Plik załadowany pomyślnie', status: 200 });
 };
 
-export { uploadFile };
+export default { uploadFile };
