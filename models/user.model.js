@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 import bCrypt from 'bcryptjs';
+import gravatar from 'gravatar';
 
 const user = new Schema({
   password: {
@@ -21,6 +22,7 @@ const user = new Schema({
     type: String,
     default: null,
   },
+  avatarURL: String,
 });
 
 user.methods.setPassword = function (password) {
@@ -31,6 +33,10 @@ user.methods.validPassword = function (password) {
   return bCrypt.compareSync(password, this.password);
 };
 
+user.methods.generateAvatar = function () {
+  this.avatarURL = gravatar.url(this.email);
+};
+
 const User = mongoose.model('user', user, 'users');
 
-export {User};
+export { User };

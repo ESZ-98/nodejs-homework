@@ -1,4 +1,4 @@
-import fs from "node:fs.promises";
+import fs from 'fs/promises';
 import path from "node:path";
 const contactsPath = path.join(process.cwd(), '/routes/api/db/contacts.json');
 import nanoid from 'nanoid';
