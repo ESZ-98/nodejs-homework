@@ -6,8 +6,10 @@ import { upload } from '../../auth/upload.js';
 
 router.post('/users/signup', usersController.signupUser);
 router.post('/users/login', usersController.loginUser);
+router.post('/users/verify', usersController.reverifyEmail);
 router.get('/users/logout', authMiddleware, usersController.logoutUser);
 router.get('/users/current', authMiddleware, usersController.currentUser);
+router.get('/users/verify/:verificationToken', usersController.verifyEmail);
 router.patch(
   '/users/avatars',
   authMiddleware,

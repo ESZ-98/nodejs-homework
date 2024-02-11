@@ -1,10 +1,12 @@
-import Joi from 'joi';
-import fs from 'fs/promises';
-import { User } from '../models/user.model.js';
-import jwt from 'jsonwebtoken';
-import path from 'node:path';
-import config from '../config/config.js';
 import Jimp from 'jimp';
+import Joi from 'joi';
+import config from '../config/config.js';
+import fs from 'fs/promises';
+import jwt from 'jsonwebtoken';
+import nanoid from 'nanoid';
+import path from 'node:path';
+import { User } from '../models/user.model.js';
+import { send } from '../services/email.service.js';
 
 import 'dotenv/config';
 
@@ -37,7 +39,10 @@ const signupUser = async (req, res, next) => {
     const newUser = new User({ email });
     newUser.generateAvatar();
     newUser.setPassword(password);
+    newUser.set('verificationToken', nanoid());
     await newUser.save();
+    const verificationToken = newUser.verificationToken;
+    send(email, verificationToken);
     return res.status(201).json({
       status: 'success',
       code: 201,
@@ -155,4 +160,58 @@ const updateAvatars = async (req, res) => {
   });
 };
 
-export default { signupUser, loginUser, logoutUser, currentUser, updateAvatars };
+const verifyEmail = async (req, res) => {
+  try {
+    const { verificationToken } = req.params;
+    const user = await User.findOne({ verificationToken });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    user.set('verify', true);
+    user.verificationToken = null;
+    await user.save();
+    return res.status(200).json({ message: 'Verification successful' });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const reverifyEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: 'Missing required field email' });
+    }
+    const user = await User.findOne({ email });
+    if (user.verify) {
+      return res.status(400).json({
+        status: 'Bad Request',
+        code: 400,
+        ResponseBody: {
+          message: 'Verification has already been passed',
+        },
+      });
+    }
+    const verificationToken = user.verificationToken;
+    await send(email, verificationToken);
+    res.status(200).json({
+      status: 'Ok',
+      code: 200,
+      ResponseBody: {
+        message: 'Verification email sent',
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export default {
+  currentUser,
+  loginUser,
+  logoutUser,
+  reverifyEmail,
+  signupUser,
+  updateAvatars,
+  verifyEmail,
+};
