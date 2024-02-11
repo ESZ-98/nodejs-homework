@@ -1,11 +1,11 @@
-import Joi from 'joi';
-import fs from 'fs/promises';
-import { User } from '../models/user.model.js';
-import jwt from 'jsonwebtoken';
-import path from 'node:path';
-import config from '../config/config.js';
 import Jimp from 'jimp';
+import Joi from 'joi';
+import config from '../config/config.js';
+import fs from 'fs/promises';
+import jwt from 'jsonwebtoken';
 import nanoid from 'nanoid';
+import path from 'node:path';
+import { User } from '../models/user.model.js';
 import { send } from '../services/email.service.js';
 
 import 'dotenv/config';
@@ -193,7 +193,7 @@ const reverifyEmail = async (req, res) => {
       });
     }
     const verificationToken = user.verificationToken;
-    send(email, verificationToken);
+    await send(email, verificationToken);
     res.status(200).json({
       status: 'Ok',
       code: 200,
@@ -207,11 +207,11 @@ const reverifyEmail = async (req, res) => {
 };
 
 export default {
-  signupUser,
+  currentUser,
   loginUser,
   logoutUser,
-  currentUser,
+  reverifyEmail,
+  signupUser,
   updateAvatars,
   verifyEmail,
-  reverifyEmail,
 };
